@@ -51,18 +51,17 @@ public class MainActivity extends AppCompatActivity {
         }
         return sub;
     }
-public void  determinarAtraso (int sueldo){
-    double atr=0.00;
 
-    if(sueldo>0){
-        atr=(sueldo*8)/100;
-    }else{
-        atr=0;
-    }
-    return atr;
+public double descuentoAtrasos (String item,double sueldo){
+        double des=0.00;
+        if(item.equals("Si")==true) {
+            des = sueldo * 0.08;
+        }else{
+            des=0;
+
+        }
+         return des;
 }
-
-
     public void registrar(View view){
         BDHelper admin=new BDHelper(this,"registro.db",null,1);
         SQLiteDatabase bd=admin.getWritableDatabase();
@@ -88,8 +87,8 @@ public void  determinarAtraso (int sueldo){
             et_departamento.setText("");
             et_hijos.setText("");
             et_estado.setText("");
-            et_atrasos.setText(this.determinarAtraso(atrasos)+"");
-            int numAtrasos=Integer.parseInt(atrasos);
+            //et_atrasos.setText(this.determinarAtraso(atrasos)+"");
+            //int numAtrasos=Integer.parseInt(atrasos);
             et_sueldo.setText(this.determinarSueldo(cargo)+"");
             int numHijos=Integer.parseInt(hijos);
             et_subsidio.setText(this.subsidio(numHijos)+"");
