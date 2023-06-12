@@ -12,6 +12,10 @@ import android.widget.Toast;
 import com.example.myapplication.bdd.BDHelper;
 
 public class MainActivity extends AppCompatActivity {
+    double sueldoFijo=0.00;
+    double subsidio=0.00;
+    double descuento=0.00;
+    double horasExtras=0.00;
     EditText et_subsidio,et_sueldo,et_atrasos,et_funcionario, et_cargo, et_departamento, et_hijos,et_estado;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,6 +66,19 @@ public double descuentoAtrasos (String item,double sueldo){
         }
          return des;
 }
+public double HorasExtras(int numHoras){
+        double pagohoras=0.00;
+        if (numHoras>0) {
+            pagohoras = numHoras * 12;
+        }else{
+            pagohoras=0.00;
+        }
+    return 0.0;
+    }
+public double sueldoRecibir(double sueldoFijo,double subsidio,double descuento,double horasExtras){
+        return sueldoFijo+sueldoFijo;
+}
+
     public void registrar(View view){
         BDHelper admin=new BDHelper(this,"registro.db",null,1);
         SQLiteDatabase bd=admin.getWritableDatabase();
@@ -87,7 +104,10 @@ public double descuentoAtrasos (String item,double sueldo){
             et_departamento.setText("");
             et_hijos.setText("");
             et_estado.setText("");
-            //et_atrasos.setText(this.determinarAtraso(atrasos)+"");
+sueldoFijo=this.determinarSueldo(cargo);
+et_sueldo.setText(sueldoFijo+"");
+
+et_subsidio.setText(subsidio+"");
             //int numAtrasos=Integer.parseInt(atrasos);
             et_sueldo.setText(this.determinarSueldo(cargo)+"");
             int numHijos=Integer.parseInt(hijos);

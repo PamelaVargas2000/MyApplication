@@ -18,6 +18,7 @@ public class BDHelper extends SQLiteOpenHelper {
                 "usu_id INTEGER PRIMARY KEY AUTOINCREMENT,"+
                 "usu_funcionario text NOT NULL,"+
                 "usu_cargo text NOT NULL," +
+                "usu_atrasos text NOT NULL," +
                 "usu_despartamento text NOT NULL," +
                 "usu_hijos integer NOT NULL," +
                 "usu_estado text NOT NULL)");
