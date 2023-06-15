@@ -1,9 +1,5 @@
 <resources>
     <string name="app_name">MyApplication</string>
-    <String name="txtFuncionario"></String>
-    <String name="txtCargo"></String>
-    <String name="txtDepartamentos"></String>
-    <String name="txtHijos"></String>
-    <String name="txtEstado"></String>
+
 
 </resources>

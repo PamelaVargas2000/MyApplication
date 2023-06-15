@@ -34,7 +34,7 @@ public class MainActivity extends AppCompatActivity {
 
         //UNIR ELEMENT0S DE BACK CON FRONT
         et_funcionario=findViewById(R.id.txtFuncionario);
-        et_cargo=findViewById(R.id.txtCargo);
+        et_cargo=findViewById(R.id.txtCargo2);
         et_departamento=findViewById(R.id.txtDepartamento);
         et_hijos=findViewById(R.id.txtHijos);
         et_estado=findViewById(R.id.txtEstado);
