@@ -3,11 +3,13 @@ package com.example.myapplication;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.ContentValues;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
+import android.widget.ListView;
 import android.widget.Toast;
 
 import com.example.myapplication.bdd.BDHelper;
@@ -20,6 +22,10 @@ public class MainActivity extends AppCompatActivity {
     double descuento=0.00;
     double horasExtras=0.00;
     EditText et_subsidio,et_sueldo,et_atrasos,et_funcionario, et_cargo, et_departamento, et_hijos,et_estado;
+    private Cursor fila;
+    ListView listaView;
+    BDHelper admin;
+    SQLiteDatabase db;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -122,14 +128,11 @@ et_subsidio.setText(subsidio+"");
         }
 
     }
-    BDHelper admin;
-    SQLiteDatabase db;
+
 
     public void consulta(View v) {
-
-        admin = new BDHelper(this, "funcionario", null, 1);
-
-        db = admin.getWritableDatabase();
+        BDHelper admin=new BDHelper(this,"registro.db",null,1);
+        SQLiteDatabase bd=admin.getWritableDatabase();
         String funcionario = et_funcionario.getText().toString();
 
         fila = db.rawQuery("select * from  tblUsuarios where funcionario=" + funcionario, null);
@@ -143,83 +146,65 @@ et_subsidio.setText(subsidio+"");
             et_atrasos.setText(fila.getString(5));
         }
         else
-            /*si no existe entonces lanzara un toast*/
-            Toast.makeText(this, "no existe un registro con dicho codigo",
+
+            Toast.makeText(this, "no existe un registro con dicho funcionario",
                     Toast.LENGTH_SHORT).show();
-        /*cerramos la base de datos*/
         db.close();
     }
     //metodo eliminar
     public void baja(View v) {
-        /*instanciamos la variables de dbhelper y
-        le pasamos el contexto , nombre de base de datos*/
-        admin = new BDHelper(this, "instituto", null, 1);
-        /*abrimos la base de datos pora escritura*/
+        admin = new BDHelper(this, "registro.db", null, 1);
         db = admin.getWritableDatabase();
-        /*creamos una variables string y lo
-        inicializamos con los datos ingresados en edittext*/
-        String codigo = et1.getText().toString();
-        /*variable int pasamos el metodo delete de la tabla registro el codigo que edittext*/
-        int cant = db.delete("registro", "codigo=" + codigo, null);
-        /*cerramos la DB*/
+        String funcionario = et_funcionario.getText().toString();
+        int cant = db.delete("tblUsuarios", "funcionario=" + funcionario, null);
         db.close();
-        /*listamos los datos de la base de datos*/
         ArrayList array_list = admin.getAllRegistros();
         ArrayAdapter<String> arrayAdapter=new ArrayAdapter<String>(
                 this,android.R.layout.simple_list_item_1, array_list);
-        /*pasamos los datos a la listview para lo muestre*/
         listaView.setAdapter(arrayAdapter);
-        /*limpiamos las cajas de texto*/
-        et1.setText("");
-        et2.setText("");
-        et3.setText("");
-        et4.setText("");
-        et5.setText("");
-        et6.setText("");
-        /*si cante es igual que unos entonces*/
+        et_funcionario.setText("");
+        et_cargo.setText("");
+        et_departamento.setText("");
+        et_hijos.setText("");
+        et_estado.setText("");
+        et_atrasos.setText("");
+
         if (cant == 1)
-            /*lanzamos un toast que notifique se elimino*/
+
             Toast.makeText(this, "se borró el registro con dicho documento",
                     Toast.LENGTH_SHORT).show();
         else
-            /*de lo contrario lanzara que esos datos no existen*/
+
             Toast.makeText(this, "no existe un registro con dicho documento",
                     Toast.LENGTH_SHORT).show();
     }
     //metodo modificar
-    public void modificacion(View v) {
-        /*instanciamos la variables de dbhelper y
-        le pasamos el contexto , nombre de base de datos*/
-        admin = new BDHelper(this, "instituto", null, 1);
-        /*abrimos la base de datos pora escritura*/
-        db = admin.getWritableDatabase();
-        /*capturamos los datos de los edittext*/
-        String codigo = et1.getText().toString();
-        String curso = et2.getText().toString();
-        String nota1 = et3.getText().toString();
-        String nota2 = et4.getText().toString();
-        String nota3 = et5.getText().toString();
-        //calculamos el promedio
-        int promedioope=0;
-        promedioope=Integer.parseInt(et3.getText().toString());
-        promedioope=promedioope+Integer.parseInt(et4.getText().toString());
-        promedioope=promedioope+Integer.parseInt(et5.getText().toString());
-        promedioope=promedioope/3;
-        //covertir a string
-        String promedio=String.valueOf(promedioope);
-        ContentValues registro = new ContentValues();
-        registro.put("codigo", codigo);
-        registro.put("curso", curso);
-        registro.put("nota1", nota1);
-        registro.put("nota2", nota2);
-        registro.put("nota3", nota3);
-        registro.put("promedio", promedio);
+    public void modificacion(View view) {
+        BDHelper admin=new BDHelper(this,"registro.db",null,1);
+        SQLiteDatabase bd=admin.getWritableDatabase();
+
+
+        String funcionario = et_funcionario.getText().toString();
+        String cargo = et_cargo.getText().toString();
+        String departamento = et_departamento.getText().toString();
+        String hijos = et_hijos.getText().toString();
+        String estado = et_estado.getText().toString();
+        String atrasos = et_atrasos.getText().toString();
+
+        if(!funcionario.isEmpty()&& !atrasos.isEmpty() && !cargo.isEmpty() && !departamento.isEmpty() && !hijos.isEmpty()&& !estado.isEmpty()){
+            ContentValues registro=new ContentValues();
+            registro.put("usu_funcionario",funcionario);
+            registro.put("usu_cargo",cargo);
+            registro.put("usu_departamento",departamento);
+            registro.put("usu_hijos",hijos);
+            registro.put("usu_estado",estado);
+            registro.put("usu_atrasos",atrasos);
+            bd.insert("tblUsuarios",null,registro);
         /*lanzamos el metodo update con el query para que actualice segun el id o codigo*/
-        int cant = db.update("registro", registro, "codigo=" + codigo, null);
-        /*cerramos la BD*/
+        int cant = db.update("tblUsuarios", registro, "funcionario=" + funcionario, null);
+        
         db.close();
-        /*listamos los datos de la base de
-        datos para mostrarlo en el listview*/
+
         ArrayList array_list = admin.getAllRegistros();
         ArrayAdapter<String> arrayAdapter=new ArrayAdapter<String>(
                 this,android.R.layout.simple_list_item_1, array_list);
