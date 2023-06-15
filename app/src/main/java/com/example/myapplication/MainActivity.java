@@ -152,7 +152,7 @@ et_subsidio.setText(subsidio+"");
         db.close();
     }
     //metodo eliminar
-    public void baja(View v) {
+    public void eliminar(View v) {
         admin = new BDHelper(this, "registro.db", null, 1);
         db = admin.getWritableDatabase();
         String funcionario = et_funcionario.getText().toString();
@@ -221,7 +221,7 @@ et_subsidio.setText(subsidio+"");
             Toast.makeText(this,"se modificaron los datos",Toast.LENGTH_SHORT)
                     .show();
         else
-          
+
             Toast.makeText(this,"no existe un registro con dicho documento",
                     Toast.LENGTH_SHORT).show();
     }
