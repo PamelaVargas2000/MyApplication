@@ -6,10 +6,13 @@ import android.content.ContentValues;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.Toast;
 
 import com.example.myapplication.bdd.BDHelper;
+
+import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
     double sueldoFijo=0.00;
@@ -29,7 +32,7 @@ public class MainActivity extends AppCompatActivity {
         et_departamento=findViewById(R.id.txtDepartamento);
         et_hijos=findViewById(R.id.txtHijos);
         et_estado=findViewById(R.id.txtEstado);
-        et_atrasos=findViewById(R.id.txtAtraso);
+        et_atrasos=findViewById(R.id.txtAtrasos);
         et_sueldo=findViewById(R.id.txtSueldo);
         et_subsidio=findViewById(R.id.txtSubsidio);
     }
@@ -119,5 +122,126 @@ et_subsidio.setText(subsidio+"");
         }
 
     }
+    BDHelper admin;
+    SQLiteDatabase db;
+
+    public void consulta(View v) {
+
+        admin = new BDHelper(this, "funcionario", null, 1);
+
+        db = admin.getWritableDatabase();
+        String funcionario = et_funcionario.getText().toString();
+
+        fila = db.rawQuery("select * from  tblUsuarios where funcionario=" + funcionario, null);
+
+        if (fila.moveToFirst()) {
+            et_funcionario.setText(fila.getString(0));
+            et_cargo.setText(fila.getString(1));
+            et_departamento.setText(fila.getString(2));
+            et_hijos.setText(fila.getString(3));
+            et_estado.setText(fila.getString(4));
+            et_atrasos.setText(fila.getString(5));
+        }
+        else
+            /*si no existe entonces lanzara un toast*/
+            Toast.makeText(this, "no existe un registro con dicho codigo",
+                    Toast.LENGTH_SHORT).show();
+        /*cerramos la base de datos*/
+        db.close();
+    }
+    //metodo eliminar
+    public void baja(View v) {
+        /*instanciamos la variables de dbhelper y
+        le pasamos el contexto , nombre de base de datos*/
+        admin = new BDHelper(this, "instituto", null, 1);
+        /*abrimos la base de datos pora escritura*/
+        db = admin.getWritableDatabase();
+        /*creamos una variables string y lo
+        inicializamos con los datos ingresados en edittext*/
+        String codigo = et1.getText().toString();
+        /*variable int pasamos el metodo delete de la tabla registro el codigo que edittext*/
+        int cant = db.delete("registro", "codigo=" + codigo, null);
+        /*cerramos la DB*/
+        db.close();
+        /*listamos los datos de la base de datos*/
+        ArrayList array_list = admin.getAllRegistros();
+        ArrayAdapter<String> arrayAdapter=new ArrayAdapter<String>(
+                this,android.R.layout.simple_list_item_1, array_list);
+        /*pasamos los datos a la listview para lo muestre*/
+        listaView.setAdapter(arrayAdapter);
+        /*limpiamos las cajas de texto*/
+        et1.setText("");
+        et2.setText("");
+        et3.setText("");
+        et4.setText("");
+        et5.setText("");
+        et6.setText("");
+        /*si cante es igual que unos entonces*/
+        if (cant == 1)
+            /*lanzamos un toast que notifique se elimino*/
+            Toast.makeText(this, "se borró el registro con dicho documento",
+                    Toast.LENGTH_SHORT).show();
+        else
+            /*de lo contrario lanzara que esos datos no existen*/
+            Toast.makeText(this, "no existe un registro con dicho documento",
+                    Toast.LENGTH_SHORT).show();
+    }
+    //metodo modificar
+    public void modificacion(View v) {
+        /*instanciamos la variables de dbhelper y
+        le pasamos el contexto , nombre de base de datos*/
+        admin = new BDHelper(this, "instituto", null, 1);
+        /*abrimos la base de datos pora escritura*/
+        db = admin.getWritableDatabase();
+        /*capturamos los datos de los edittext*/
+        String codigo = et1.getText().toString();
+        String curso = et2.getText().toString();
+        String nota1 = et3.getText().toString();
+        String nota2 = et4.getText().toString();
+        String nota3 = et5.getText().toString();
+        //calculamos el promedio
+        int promedioope=0;
+        promedioope=Integer.parseInt(et3.getText().toString());
+        promedioope=promedioope+Integer.parseInt(et4.getText().toString());
+        promedioope=promedioope+Integer.parseInt(et5.getText().toString());
+        promedioope=promedioope/3;
+        //covertir a string
+        String promedio=String.valueOf(promedioope);
+        ContentValues registro = new ContentValues();
+        registro.put("codigo", codigo);
+        registro.put("curso", curso);
+        registro.put("nota1", nota1);
+        registro.put("nota2", nota2);
+        registro.put("nota3", nota3);
+        registro.put("promedio", promedio);
+        /*lanzamos el metodo update con el query para que actualice segun el id o codigo*/
+        int cant = db.update("registro", registro, "codigo=" + codigo, null);
+        /*cerramos la BD*/
+        db.close();
+        /*listamos los datos de la base de
+        datos para mostrarlo en el listview*/
+        ArrayList array_list = admin.getAllRegistros();
+        ArrayAdapter<String> arrayAdapter=new ArrayAdapter<String>(
+                this,android.R.layout.simple_list_item_1, array_list);
+        /*mostramos los datos de la db*/
+        listaView.setAdapter(arrayAdapter);
+        /*limpiamos la caja de texto*/
+        et1.setText("");
+        et2.setText("");
+        et3.setText("");
+        et4.setText("");
+        et5.setText("");
+        et6.setText("");
+        /*si cante es igual que unos entonces*/
+        if (cant == 1)
+            /*si se cumple lka sentencia entonces muestra el toast*/
+            Toast.makeText(this,"se modificaron los datos",Toast.LENGTH_SHORT)
+                    .show();
+        else
+            /*de lo contrario muestra el siguiente toast*/
+            Toast.makeText(this,"no existe un registro con dicho documento",
+                    Toast.LENGTH_SHORT).show();
+    }
+}
 
 }
