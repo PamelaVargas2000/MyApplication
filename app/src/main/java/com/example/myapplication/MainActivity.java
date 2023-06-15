@@ -200,30 +200,28 @@ et_subsidio.setText(subsidio+"");
             registro.put("usu_estado",estado);
             registro.put("usu_atrasos",atrasos);
             bd.insert("tblUsuarios",null,registro);
-        /*lanzamos el metodo update con el query para que actualice segun el id o codigo*/
         int cant = db.update("tblUsuarios", registro, "funcionario=" + funcionario, null);
-        
+
         db.close();
 
         ArrayList array_list = admin.getAllRegistros();
         ArrayAdapter<String> arrayAdapter=new ArrayAdapter<String>(
                 this,android.R.layout.simple_list_item_1, array_list);
-        /*mostramos los datos de la db*/
         listaView.setAdapter(arrayAdapter);
-        /*limpiamos la caja de texto*/
-        et1.setText("");
-        et2.setText("");
-        et3.setText("");
-        et4.setText("");
-        et5.setText("");
-        et6.setText("");
-        /*si cante es igual que unos entonces*/
+
+        et_funcionario.setText("");
+        et_cargo.setText("");
+        et_departamento.setText("");
+        et_hijos.setText("");
+        et_estado.setText("");
+        et_atrasos.setText("");
+
         if (cant == 1)
-            /*si se cumple lka sentencia entonces muestra el toast*/
+
             Toast.makeText(this,"se modificaron los datos",Toast.LENGTH_SHORT)
                     .show();
         else
-            /*de lo contrario muestra el siguiente toast*/
+          
             Toast.makeText(this,"no existe un registro con dicho documento",
                     Toast.LENGTH_SHORT).show();
     }
